@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/auth/register.dart';
+import 'package:frontend/models/user.dart';
+import 'package:frontend/services/auth/auth_service.dart';
+import 'package:frontend/services/utility/dialog.dart';
 import 'package:regexpattern/regexpattern.dart';
-import 'package:http/http.dart' as http;
 
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
@@ -30,7 +29,7 @@ class _MyLoginState extends State<MyLoginState> {
   String? email;
   String? password;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext mycontext) {
     return Form(
       key: _formKey,
       child: Column(
@@ -70,57 +69,25 @@ class _MyLoginState extends State<MyLoginState> {
             child: const Text('Login'),
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
-                final response = await login();
-                switch (response.statusCode) {
-                  case 202:
-                    showDialog(
-                        context: context,
-                        builder: (context) => showMydialog("LOGIN SUCCESS"));
-                    break;
-                  case 500:
-                    showDialog(
-                        context: context,
-                        builder: (context) =>
-                            showMydialog("LOGIN FAILED INTERNAL ERROR"));
-                    break;
-                  case 401:
-                    showDialog(
-                        context: context,
-                        builder: (context) => showMydialog("BAD INFORMATION"));
-                    break;
+                final bool state =
+                    await AuthService.login(User.instance(email!, password!));
+                if (state) {
+                  await MyDialog.fullDialog(context, "ACCOUNT CREATED");
+                  Navigator.pushNamed(context, "/register");
+                  return;
                 }
+                await MyDialog.fullDialog(context, "BAD INFORMATION");
               }
+            },
+          ),
+          ElevatedButton(
+            child: const Text('No account'),
+            onPressed: () async {
+              Navigator.pushNamed(context, '/register');
             },
           )
         ],
       ),
     );
-  }
-
-  Future<http.Response> login() {
-    return http.post(Uri.parse('http://localhost:3000/auth/login'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(
-            <String, String?>{'email': email, 'password': password}));
-  }
-
-  Widget showMydialog(String message) {
-    return AlertDialog(
-        title: const Text("MESSAGE"),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-        elevation: 16,
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[Text("Message :" + message)],
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'Cancel'),
-            child: const Text('Cancel'),
-          ),
-        ]);
   }
 }
