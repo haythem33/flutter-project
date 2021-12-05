@@ -39,6 +39,7 @@ dependencies:
   sqflite:
   path:
   flutter_secure_storage: ^5.0.2
+  flutter_speed_dial:
 dev_dependencies:
   flutter_test:
     sdk: flutter
