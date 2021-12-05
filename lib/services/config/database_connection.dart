@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -26,5 +25,18 @@ class Mydatabase {
       password TEXT NOT NULL
     )
     ''');
+    await db.execute('''CREATE TABLE FAMILY (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      familyname TEXT NOT NULL,
+      )''');
+    await db.execute('''CREATE TABLE MATERIEL (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nomMateriel TEXT NOT NULL,
+      quantite INTEGER  NOT NULL,
+      dateAcquisition DATE,
+      dateRetour DATE,
+      nomF TEXT NOT NULL,
+      FORIEGN KEY(nomF)REFERENCES FAMILY(familyname)
+      )''');
   }
 }

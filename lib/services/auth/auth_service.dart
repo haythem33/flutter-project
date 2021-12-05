@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frontend/models/user.dart';
+import '/models/user.dart';
 import 'package:frontend/services/config/database_connection.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
