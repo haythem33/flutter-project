@@ -10,14 +10,13 @@ class Materiel {
       required this.dateAcqui,
       required this.dateRetour,
       required this.nomF});
-  Materiel.create(
-      this.nomMateriel, this.quantite, this.dateAcqui, this.dateRetour);
+  Materiel.create(this.nomMateriel, this.quantite, this.dateAcqui, this.nomF);
 
   Map<String, dynamic> toMap() {
     return {
       'nomMateriel': nomMateriel,
       'quantite': quantite,
-      'dateAcqui': dateAcqui,
+      'dateAcquisition': dateAcqui!.microsecondsSinceEpoch,
       'dateRetour': dateRetour,
       'nomF': nomF,
     };
@@ -27,7 +26,7 @@ class Materiel {
     return Materiel(
       nomMateriel: json['nomMateriel'],
       quantite: json['quantite'],
-      dateAcqui: json['dateAcqui'],
+      dateAcqui: json['dateAcquisition'],
       dateRetour: json['dateRetour'],
       nomF: json['nomF'],
     );

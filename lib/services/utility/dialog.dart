@@ -24,4 +24,18 @@ class MyDialog {
               ]);
         });
   }
+
+  static Future<DateTime?> dateDialog(BuildContext context) {
+    return showDialog<DateTime>(
+      context: context,
+      builder: (BuildContext context) {
+        return DatePickerDialog(
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime.now(),
+          confirmText: "Procced",
+        );
+      },
+    );
+  }
 }

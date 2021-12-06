@@ -5,7 +5,6 @@ import 'package:frontend/models/materiel.dart';
 import 'package:frontend/services/materiell/materilservice.dart';
 import 'package:frontend/services/utility/dialog.dart';
 import 'package:frontend/services/family/familyservice.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class AddMaterial extends StatefulWidget {
   const AddMaterial({Key? key}) : super(key: key);
@@ -18,7 +17,6 @@ class _MymatState extends State<AddMaterial> {
   String? nomMateriel;
   int? qnt;
   DateTime? dateA;
-  DateTime? dateR;
   String? nomF;
   List<Famille>? allFamily;
 
@@ -89,27 +87,29 @@ class _MymatState extends State<AddMaterial> {
                       return 'Please enter some text';
                     }
                     setState(() {
-                      qnt = value as int?;
+                      qnt = int.parse(value);
                     });
                   },
                 ),
-                SfDateRangePicker(
-                  view: DateRangePickerView.decade,
-                  maxDate: DateTime.now(),
-                  onSelectionChanged: (args) {
-                    setState(() {
-                      if (args.value is DateTime) {
-                        dateA = args.value;
-                      }
-                    });
-                  },
-                  selectionMode: DateRangePickerSelectionMode.single,
-                ),
+                ElevatedButton(
+                    onPressed: () async {
+                      DateTime? date = await MyDialog.dateDialog(context);
+                      setState(() {
+                        dateA = date;
+                      });
+                    },
+                    child: const Text("Date d'acquition")),
                 children,
                 ElevatedButton(
                   child: const Text('add'),
                   onPressed: () async {
-                    if (_formKey.currentState!.validate()) {}
+                    if (_formKey.currentState!.validate()) {
+                      bool state = await Materielservice.add(
+                          Materiel.create(nomMateriel, qnt, dateA, nomF));
+                      state
+                          ? MyDialog.fullDialog(context, "MATERIAL ADDED")
+                          : MyDialog.fullDialog(context, "ERROR");
+                    }
                   },
                 ),
               ],

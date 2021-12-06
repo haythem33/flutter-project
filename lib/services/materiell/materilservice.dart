@@ -6,16 +6,15 @@ import 'package:sqflite/sqflite.dart';
 class Materielservice {
   static Future<bool> add(Materiel mat) async {
     Database db = await Mydatabase.getDatabase();
-    List<Map> _user = await db.query("MATERIEL",
-        where: "nomMateriel = ? ,quantite=?,dateAcqui=?,dateRetour=?,nomF=?",
+    List<Map> material = await db.query("MATERIEL",
+        where: "nomMateriel=? and quantite=? and dateAcquisition=? and nomF=?",
         whereArgs: [
           mat.nomMateriel,
           mat.quantite,
-          mat.dateAcqui,
-          mat.dateRetour,
+          mat.dateAcqui!.microsecondsSinceEpoch,
           mat.nomF
         ]);
-    if (_user.isEmpty) {
+    if (material.isEmpty) {
       await db.insert("MATERIEL", mat.toMap());
       return true;
     }

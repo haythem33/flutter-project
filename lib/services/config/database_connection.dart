@@ -34,8 +34,8 @@ class Mydatabase {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nomMateriel TEXT NOT NULL,
       quantite INTEGER  NOT NULL,
-      dateAcquisition DATE,
-      dateRetour DATE,
+      dateAcquisition INTEGER,
+      dateRetour INTEGER,
       nomF TEXT NOT NULL,
       FOREIGN KEY(nomF) REFERENCES FAMILY(familyname)
       )
