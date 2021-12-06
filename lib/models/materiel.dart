@@ -10,6 +10,8 @@ class Materiel {
       required this.dateAcqui,
       required this.dateRetour,
       required this.nomF});
+  Materiel.create(
+      this.nomMateriel, this.quantite, this.dateAcqui, this.dateRetour);
 
   Map<String, dynamic> toMap() {
     return {

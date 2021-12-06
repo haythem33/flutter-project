@@ -5,6 +5,7 @@ import 'package:frontend/models/materiel.dart';
 import 'package:frontend/services/materiell/materilservice.dart';
 import 'package:frontend/services/utility/dialog.dart';
 import 'package:frontend/services/family/familyservice.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class AddMaterial extends StatefulWidget {
   const AddMaterial({Key? key}) : super(key: key);
@@ -37,12 +38,29 @@ class _MymatState extends State<AddMaterial> {
             Widget children;
             if (snapshot.hasData) {
               children = DropdownButton<String>(
-                  items: snapshot.data!.map((e) {
-                return DropdownMenuItem<String>(
-                  value: e.familyname,
-                  child: Text(e.familyname!),
-                );
-              }).toList());
+                value: nomF,
+                icon: const Icon(Icons.arrow_downward),
+                iconSize: 24,
+                hint: const Text("CHOOSE FAMILY"),
+                elevation: 16,
+                style: const TextStyle(color: Colors.deepPurple),
+                underline: Container(
+                  height: 2,
+                  color: Colors.deepPurpleAccent,
+                ),
+                items: snapshot.data!.map<DropdownMenuItem<String>>((e) {
+                  return DropdownMenuItem<String>(
+                    alignment: AlignmentDirectional.center,
+                    value: e.familyname,
+                    child: Text(e.familyname!),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    nomF = value;
+                  });
+                },
+              );
             } else {
               children = const Text('No FAMILY');
             }
@@ -70,38 +88,22 @@ class _MymatState extends State<AddMaterial> {
                     if (value == null) {
                       return 'Please enter some text';
                     }
-
                     setState(() {
                       qnt = value as int?;
                     });
                   },
                 ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    hintText: 'Enter date',
-                  ),
-                  validator: (String? value) {
-                    if (value == null) {
-                      return 'Please enter some text';
-                    }
+                SfDateRangePicker(
+                  view: DateRangePickerView.decade,
+                  maxDate: DateTime.now(),
+                  onSelectionChanged: (args) {
                     setState(() {
-                      dateA = value as DateTime?;
+                      if (args.value is DateTime) {
+                        dateA = args.value;
+                      }
                     });
                   },
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    hintText: 'Enter date',
-                  ),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-
-                    setState(() {
-                      dateR = value as DateTime?;
-                    });
-                  },
+                  selectionMode: DateRangePickerSelectionMode.single,
                 ),
                 children,
                 ElevatedButton(

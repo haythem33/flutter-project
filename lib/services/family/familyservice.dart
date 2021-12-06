@@ -20,6 +20,7 @@ class Familyservice {
     List<Map<String, Object?>> mapFamilly = await db.query("FAMILY");
     List<Famille> allFamilly = [];
     mapFamilly.forEach((element) => allFamilly.add(Famille.fromMap(element)));
+    print(allFamilly);
     return allFamilly;
   }
 }
