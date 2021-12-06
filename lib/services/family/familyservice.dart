@@ -1,19 +1,25 @@
-import 'package:frontend/models/Famille.dart';
+import 'package:frontend/models/famille.dart';
 import 'package:frontend/services/config/database_connection.dart';
 import 'package:sqflite/sqlite_api.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-// ignore: camel_case_types
-class familyservice {
-  static const storage = FlutterSecureStorage();
+class Familyservice {
   static Future<bool> add(Famille fam) async {
     Database db = await Mydatabase.getDatabase();
-    List<Map> _user = await db
-        .query("FAMILY", where: "familyname = ?", whereArgs: [fam.nomFamille]);
-    if (_user.isEmpty) {
+    List<Map> family = await db
+        .query("FAMILY", where: "familyname = ?", whereArgs: [fam.familyname]);
+    if (family.isEmpty) {
+      print(fam.toMap());
       await db.insert("FAMILY", fam.toMap());
       return true;
     }
     return false;
+  }
+
+  static Future<List<Famille>> getAllFamily() async {
+    Database db = await Mydatabase.getDatabase();
+    List<Map<String, Object?>> mapFamilly = await db.query("FAMILY");
+    List<Famille> allFamilly = [];
+    mapFamilly.forEach((element) => allFamilly.add(Famille.fromMap(element)));
+    return allFamilly;
   }
 }

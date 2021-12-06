@@ -3,9 +3,7 @@ import 'package:frontend/models/materiel.dart';
 import 'package:frontend/services/config/database_connection.dart';
 import 'package:sqflite/sqflite.dart';
 
-// ignore: camel_case_types
-class materielservice {
-  static const storage = FlutterSecureStorage();
+class Materielservice {
   static Future<bool> add(Materiel mat) async {
     Database db = await Mydatabase.getDatabase();
     List<Map> _user = await db.query("MATERIEL",

@@ -27,8 +27,9 @@ class Mydatabase {
     ''');
     await db.execute('''CREATE TABLE FAMILY (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      familyname TEXT NOT NULL,
-      )''');
+      familyname TEXT NOT NULL
+      )
+      ''');
     await db.execute('''CREATE TABLE MATERIEL (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nomMateriel TEXT NOT NULL,
@@ -36,7 +37,8 @@ class Mydatabase {
       dateAcquisition DATE,
       dateRetour DATE,
       nomF TEXT NOT NULL,
-      FORIEGN KEY(nomF)REFERENCES FAMILY(familyname)
-      )''');
+      FOREIGN KEY(nomF) REFERENCES FAMILY(familyname)
+      )
+      ''');
   }
 }

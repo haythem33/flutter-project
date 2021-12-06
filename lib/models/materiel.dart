@@ -10,8 +10,7 @@ class Materiel {
       required this.dateAcqui,
       required this.dateRetour,
       required this.nomF});
-  Materiel.instance(this.nomMateriel, this.quantite, this.dateAcqui,
-      this.dateRetour, this.nomF);
+
   Map<String, dynamic> toMap() {
     return {
       'nomMateriel': nomMateriel,

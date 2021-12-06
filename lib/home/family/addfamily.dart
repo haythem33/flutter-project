@@ -1,28 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/services/utility/dialog.dart';
-import 'package:frontend/models/Famille.dart';
+import 'package:frontend/models/famille.dart';
 import 'package:frontend/services/family/familyservice.dart';
 
-class AddFamily extends StatelessWidget {
+class AddFamily extends StatefulWidget {
   const AddFamily({Key? key}) : super(key: key);
-
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text("ADD FAMILY"),
-        ),
-        body: const MyFamilyState());
-  }
+  State<AddFamily> createState() => _MyFamilyState();
 }
 
-class MyFamilyState extends StatefulWidget {
-  const MyFamilyState({Key? key}) : super(key: key);
-  @override
-  State<MyFamilyState> createState() => _MyFamilyState();
-}
-
-class _MyFamilyState extends State<MyFamilyState> {
+class _MyFamilyState extends State<AddFamily> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? nomFamille;
 
@@ -51,13 +38,11 @@ class _MyFamilyState extends State<MyFamilyState> {
             child: const Text('add'),
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
-                final bool state =
-                    await familyservice.add(Famille.instance(nomFamille));
-                if (state) {
-                  await MyDialog.fullDialog(context, "FAMILY ADDED ");
-                  return;
-                }
-                await MyDialog.fullDialog(context, "BAD INFORMATION");
+                bool state =
+                    await Familyservice.add(Famille(familyname: nomFamille));
+                await MyDialog.fullDialog(
+                    context, state ? "INSERT SUCCESS" : "FAMILY EXISTS");
+                Familyservice.getAllFamily();
               }
             },
           ),
