@@ -34,7 +34,7 @@ class _MyHome extends State<MyHome> {
       body: Navigator(
         key: key,
         initialRoute: '/family',
-        onGenerateRoute: onGenerateRoute,
+        onGenerateRoute: homeRoutes,
       ),
       bottomNavigationBar:
           BottomNavigationBar(items: const <BottomNavigationBarItem>[

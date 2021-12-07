@@ -43,6 +43,9 @@ class _MyFamilyState extends State<AddFamily> {
                 await MyDialog.fullDialog(
                     context, state ? "INSERT SUCCESS" : "FAMILY EXISTS");
                 Familyservice.getAllFamily();
+                if (state) {
+                  Navigator.pushNamed(context, '/listFamily');
+                }
               }
             },
           ),
