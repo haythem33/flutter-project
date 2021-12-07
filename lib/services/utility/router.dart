@@ -5,6 +5,7 @@ import 'package:frontend/home/material/addmaterial.dart';
 import 'package:frontend/home/material/material.dart';
 import 'package:frontend/auth/register.dart';
 import 'package:frontend/home/family/family.dart';
+import 'package:frontend/home/family/listFamily.dart';
 
 Route onGenerateRoute(RouteSettings setting) {
   late Widget page = const Register();
@@ -20,6 +21,9 @@ Route onGenerateRoute(RouteSettings setting) {
       break;
     case '/addFamily':
       page = const AddFamily();
+      break;
+    case '/listFamily':
+      page = const listFamily();
       break;
   }
   return MaterialPageRoute<dynamic>(

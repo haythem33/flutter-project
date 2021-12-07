@@ -38,7 +38,12 @@ class MyFamilyState extends State<Family> {
               label: 'List Family',
               backgroundColor: Colors.red[400],
               foregroundColor: Colors.white,
-              onTap: () {}),
+              onTap: () {
+                setState(() {
+                  isDialOpen.value = false;
+                });
+                Navigator.pushNamed(context, '/listFamily');
+              }),
           SpeedDialChild(
               child: const Icon(Icons.add),
               label: 'Add Family',

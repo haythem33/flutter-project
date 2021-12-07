@@ -1,5 +1,6 @@
 import 'package:frontend/models/famille.dart';
 import 'package:frontend/services/config/database_connection.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class Familyservice {
@@ -22,5 +23,13 @@ class Familyservice {
     mapFamilly.forEach((element) => allFamilly.add(Famille.fromMap(element)));
     print(allFamilly);
     return allFamilly;
+  }
+
+  static Future<int?> length() async {
+    Database db = await Mydatabase.getDatabase();
+    var count = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM FAMILY '));
+
+    return count;
   }
 }
