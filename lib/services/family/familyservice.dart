@@ -21,15 +21,6 @@ class Familyservice {
     List<Map<String, Object?>> mapFamilly = await db.query("FAMILY");
     List<Famille> allFamilly = [];
     mapFamilly.forEach((element) => allFamilly.add(Famille.fromMap(element)));
-    print(allFamilly);
     return allFamilly;
-  }
-
-  static Future<int?> length() async {
-    Database db = await Mydatabase.getDatabase();
-    var count = Sqflite.firstIntValue(
-        await db.rawQuery('SELECT COUNT(*) FROM FAMILY '));
-
-    return count;
   }
 }

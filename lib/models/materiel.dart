@@ -17,7 +17,7 @@ class Materiel {
       'nomMateriel': nomMateriel,
       'quantite': quantite,
       'dateAcquisition': dateAcqui!.microsecondsSinceEpoch,
-      'dateRetour': dateRetour,
+      'dateRetour': dateRetour!.microsecondsSinceEpoch,
       'nomF': nomF,
     };
   }
@@ -26,8 +26,10 @@ class Materiel {
     return Materiel(
       nomMateriel: json['nomMateriel'],
       quantite: json['quantite'],
-      dateAcqui: json['dateAcquisition'],
-      dateRetour: json['dateRetour'],
+      dateAcqui: DateTime.fromMicrosecondsSinceEpoch(json['dateAcquisition']),
+      dateRetour: json['dateRetour'] != null
+          ? DateTime.fromMicrosecondsSinceEpoch(json['dateRetour'])
+          : null,
       nomF: json['nomF'],
     );
   }

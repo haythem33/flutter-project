@@ -20,4 +20,13 @@ class Materielservice {
     }
     return false;
   }
+
+  static Future<List<Materiel>> getAllMaterial() async {
+    Database db = await Mydatabase.getDatabase();
+    List<Map<String, Object?>> mapMaterial = await db.query("MATERIEL");
+    List<Materiel> allMaterial = [];
+    mapMaterial
+        .forEach((element) => allMaterial.add(Materiel.fromMap(element)));
+    return allMaterial;
+  }
 }
