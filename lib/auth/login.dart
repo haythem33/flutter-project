@@ -72,8 +72,7 @@ class _MyLoginState extends State<MyLoginState> {
                 final bool state =
                     await AuthService.login(User.instance(email!, password!));
                 if (state) {
-                  await MyDialog.fullDialog(context, "ACCOUNT CREATED");
-                  Navigator.pushNamed(context, "/register");
+                  Navigator.pushNamed(context, "/home");
                   return;
                 }
                 await MyDialog.fullDialog(context, "BAD INFORMATION");

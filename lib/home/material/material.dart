@@ -71,7 +71,7 @@ class MyMaterialState extends State<MyMaterial> {
                     setState(() {
                       isDialOpen.value = false;
                     });
-                    key.currentState!.pushNamed('/addMaterial');
+                    key.currentState!.pushNamed('/returnMaterial');
                   }),
             ],
           )),

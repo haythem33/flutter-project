@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/services/auth/auth_service.dart';
 import 'package:frontend/services/utility/router.dart';
 
 class MyHome extends StatefulWidget {
@@ -11,18 +12,13 @@ class MyHome extends StatefulWidget {
 class _MyHome extends State<MyHome> {
   final GlobalKey<NavigatorState> key = GlobalKey();
   int myindex = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      myindex = index;
-      switch (index) {
-        case 0:
-          key.currentState!.pushNamed('/family');
-          break;
-        case 1:
-          key.currentState!.pushNamed('/material');
-          break;
-      }
-    });
+
+  @override
+  void initState() {
+    super.initState();
+    AuthService.isLogged().then((value) => {
+          if (!value) {Navigator.pushNamed(context, "/login")}
+        });
   }
 
   @override
@@ -48,5 +44,19 @@ class _MyHome extends State<MyHome> {
         ),
       ], currentIndex: myindex, onTap: _onItemTapped),
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      myindex = index;
+      switch (index) {
+        case 0:
+          key.currentState!.pushNamed('/family');
+          break;
+        case 1:
+          key.currentState!.pushNamed('/material');
+          break;
+      }
+    });
   }
 }

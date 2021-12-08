@@ -33,6 +33,11 @@ class AuthService {
     return false;
   }
 
+  static Future<bool> isLogged() async {
+    return storage.containsKey(
+        key: 'token', aOptions: AuthService._getAndroidOptions());
+  }
+
   static AndroidOptions _getAndroidOptions() {
     return const AndroidOptions(
       encryptedSharedPreferences: true,

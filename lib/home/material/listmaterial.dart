@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/materiel.dart';
 import 'package:frontend/services/family/familyservice.dart';
 import 'package:frontend/services/materiell/materilservice.dart';
+import 'package:frontend/services/utility/dialog.dart';
 
 class ListMaterial extends StatefulWidget {
   const ListMaterial({Key? key}) : super(key: key);
@@ -34,7 +35,7 @@ class ListMaterialState extends State<ListMaterial> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           ListTile(
-                            leading: const Icon(Icons.album, size: 48),
+                            leading: const Icon(Icons.shop_two, size: 48),
                             title: Text(projectSnap.data![index].nomMateriel!,
                                 style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w600)),
@@ -47,13 +48,24 @@ class ListMaterialState extends State<ListMaterial> {
                             children: <Widget>[
                               TextButton(
                                 child: const Text('More detail'),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  await MyDialog.detailMaterial(
+                                      context, projectSnap.data![index]);
+                                },
                               ),
                               const SizedBox(width: 8),
                               const SizedBox(width: 8),
                               TextButton(
                                 child: const Text('Borrow'),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  if (projectSnap.data![index].stateBorrow!) {
+                                    MyDialog.fullDialog(
+                                        context, "Item aleardy borrowed");
+                                    return;
+                                  }
+                                  MyDialog.borrowMaterialForm(
+                                      context, projectSnap.data![index]);
+                                },
                               ),
                             ],
                           ),
