@@ -1,4 +1,3 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:frontend/models/materiel.dart';
 import 'package:frontend/models/membre.dart';
 import 'package:frontend/services/config/database_connection.dart';
@@ -33,10 +32,41 @@ class Materielservice {
 
   static Future<bool> borrowMaterial(Member mem, Materiel mat) async {
     Database db = await Mydatabase.getDatabase();
-    int idMember = await db.insert("MEMBERS", mem.toMap());
-    mat.setIdMember(idMember);
-    mat.stateBorrow = true;
-    await db.update("MATERIEL", mat.toMap());
+    mat.quantite = mat.quantite! - mem.quantite!;
+    await db.insert("MEMBERS", mem.toMap());
+    await db
+        .update("MATERIEL", mat.toMap(), where: "id = ?", whereArgs: [mat.id]);
+    return true;
+  }
+
+  static Future<List<Member>> getAllMember() async {
+    Database db = await Mydatabase.getDatabase();
+    List<Map<String, Object?>> mapMembers = await db.query("MEMBERS");
+    List<Member> allMembers = [];
+    mapMembers.forEach((element) => allMembers.add(Member.fromMap(element)));
+    return allMembers;
+  }
+
+  static Future<Materiel> getMaterialById(int id) async {
+    Database db = await Mydatabase.getDatabase();
+    List<Map<String, Object?>> map =
+        await db.query("MATERIEL", where: "id = ?", whereArgs: [id]);
+    return Materiel.fromMap(map.first);
+  }
+
+  static Future<List<Materiel>> getMaterialByNomF(String nomF) async {
+    Database db = await Mydatabase.getDatabase();
+    List<Map<String, dynamic>> materials =
+        await db.query("MATERIEL", where: "nomF = ?", whereArgs: [nomF]);
+    List<Materiel> allMaterial = [];
+    materials.forEach((element) => allMaterial.add(Materiel.fromMap(element)));
+    return allMaterial;
+  }
+
+  static Future<bool> returnBorrow(Member mem) async {
+    Database db = await Mydatabase.getDatabase();
+    await db
+        .update("MEMBERS", mem.toMap(), where: "id = ?", whereArgs: [mem.id]);
     return true;
   }
 }

@@ -40,6 +40,7 @@ dependencies:
   path:
   flutter_secure_storage: ^5.0.2
   flutter_speed_dial:
+  anim_search_bar: ^2.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

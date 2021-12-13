@@ -80,9 +80,15 @@ class MyDialog {
     String? firstName;
     String? lastName;
     String? phoneNumber;
+    String? quantite;
     return showDialog<void>(
         context: context,
         builder: (BuildContext context) {
+          if (mat.quantite! < 1) {
+            return const AlertDialog(
+              content: Text("No Quatity left"),
+            );
+          }
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
               content: Form(
@@ -98,7 +104,9 @@ class MyDialog {
                           if (value!.isEmpty) {
                             return 'you must enter your first name';
                           }
-                          firstName = value;
+                          setState(() {
+                            firstName = value;
+                          });
                         },
                       ),
                       TextFormField(
@@ -109,7 +117,9 @@ class MyDialog {
                           if (value!.isEmpty) {
                             return 'you must enter your last name';
                           }
-                          lastName = value;
+                          setState(() {
+                            lastName = value;
+                          });
                         },
                       ),
                       TextFormField(
@@ -120,7 +130,26 @@ class MyDialog {
                           if (value!.isEmpty) {
                             return 'you must enter your phone number';
                           }
-                          phoneNumber = value;
+                          setState(() {
+                            phoneNumber = value;
+                          });
+                        },
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          hintText: 'Enter Quantity',
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'you must enter meterial quantity';
+                          }
+
+                          if (int.parse(value) > mat.quantite!) {
+                            return 'max quantity is ' + mat.quantite.toString();
+                          }
+                          setState(() {
+                            quantite = value;
+                          });
                         },
                       ),
                     ],
@@ -132,17 +161,102 @@ class MyDialog {
                   child: const Text('Cancel'),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      Materielservice.borrowMaterial(
+                      bool state = await Materielservice.borrowMaterial(
                           Member(
+                              id: null,
                               firstName: firstName,
                               lastName: lastName,
-                              phoneNumber: int.parse(phoneNumber!)),
+                              phoneNumber: int.parse(phoneNumber!),
+                              idMaterial: mat.id,
+                              quantite: int.parse(quantite!),
+                              state: null,
+                              dateReturn: null),
                           mat);
+                      if (state) {
+                        Navigator.pop(context, 'Cancel');
+                      }
                     }
                   },
                   child: const Text('Borrow'),
+                ),
+              ],
+            );
+          });
+        });
+  }
+
+  static Future<void> returnMaterialForm(BuildContext context, Member mem) {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    DateTime? dateR;
+    String? etat;
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40)),
+              elevation: 16,
+              content: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      DropdownButton<String>(
+                        value: etat,
+                        iconSize: 24,
+                        elevation: 16,
+                        hint: const Text("Enter State"),
+                        style: const TextStyle(color: Colors.black),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.blue,
+                        ),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            etat = newValue!;
+                          });
+                        },
+                        items: <String>[
+                          'endommagé',
+                          'gravement endomagé',
+                          'intact'
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                      ElevatedButton(
+                          onPressed: () async {
+                            DateTime? date = await MyDialog.dateDialog(context);
+                            setState(() {
+                              dateR = date;
+                            });
+                          },
+                          child: const Text("Enter date Retour")),
+                    ],
+                  )),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      mem.state = etat;
+                      mem.dateReturn = dateR;
+                      bool state = await Materielservice.returnBorrow(mem);
+                      if (state) {
+                        Navigator.pop(context, 'Cancel');
+                      }
+                    }
+                  },
+                  child: const Text('Return Borrow'),
                 ),
               ],
             );

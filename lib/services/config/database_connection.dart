@@ -13,7 +13,6 @@ class Mydatabase {
   static Future<Database> initDatabase() async {
     String documentDirectory = await getDatabasesPath();
     String path = join(documentDirectory, databaseName);
-    await deleteDatabase(path);
     return await openDatabase(path,
         version: databaseVersion, onCreate: _onCreate);
   }
@@ -38,17 +37,19 @@ class Mydatabase {
       dateAcquisition INTEGER,
       dateRetour INTEGER,
       nomF TEXT NOT NULL,
-      stateBorrow BOOLEAN NOT NULL,
-      idMember INTEGER,
-      FOREIGN KEY(nomF) REFERENCES FAMILY(familyname),
-      FOREIGN KEY(idMember) REFERENCES MEMBERS(id)
+      FOREIGN KEY(nomF) REFERENCES FAMILY(familyname)
       )
       ''');
     await db.execute(''' CREATE TABLE MEMBERS(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       firstName TEXT NOT NULL,
       lastName TEXT NOT NULL,
-      phoneNumber INTEGER NOT NULL
+      phoneNumber INTEGER NOT NULL,
+      quantite INTEGER NOT NULL,
+      idMaterial INTEGER,
+      state TEXT,
+      dateReturn INTEGER,
+      FOREIGN KEY(idMaterial) REFERENCES MATERIEL(id)
       )
     ''');
   }

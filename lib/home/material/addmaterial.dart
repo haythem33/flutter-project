@@ -104,8 +104,8 @@ class _MymatState extends State<AddMaterial> {
                   child: const Text('add'),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      bool state = await Materielservice.add(Materiel.create(
-                          nomMateriel, qnt, dateA, nomF, false));
+                      bool state = await Materielservice.add(
+                          Materiel.create(nomMateriel, qnt, dateA, nomF));
                       state
                           ? MyDialog.fullDialog(context, "MATERIAL ADDED")
                           : MyDialog.fullDialog(context, "ERROR");

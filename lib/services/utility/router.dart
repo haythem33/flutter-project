@@ -4,11 +4,10 @@ import 'package:frontend/auth/login.dart';
 import 'package:frontend/home/family/addfamily.dart';
 import 'package:frontend/home/material/addmaterial.dart';
 import 'package:frontend/home/material/listmaterial.dart';
+import 'package:frontend/home/material/listmember.dart';
 import 'package:frontend/home/material/material.dart';
-import 'package:frontend/auth/register.dart';
 import 'package:frontend/home/family/family.dart';
 import 'package:frontend/home/family/listfamily.dart';
-import 'package:frontend/home/material/returnmaterial.dart';
 
 Route homeRoutes(RouteSettings setting) {
   late Widget page = const Login();
@@ -55,8 +54,8 @@ Route materialRoute(RouteSettings settings) {
     case '/addMaterial':
       page = const AddMaterial();
       break;
-    case '/returnMaterial':
-      page = const ReturnMaterial();
+    case '/listMember':
+      page = const ListMember();
       break;
   }
   return MaterialPageRoute<dynamic>(
