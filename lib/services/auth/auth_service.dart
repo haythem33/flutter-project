@@ -43,4 +43,9 @@ class AuthService {
       encryptedSharedPreferences: true,
     );
   }
+
+  static Future<void> logOut() async {
+    await storage.delete(
+        key: 'token', aOptions: AuthService._getAndroidOptions());
+  }
 }

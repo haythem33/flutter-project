@@ -16,36 +16,43 @@ class ListMaterial extends StatefulWidget {
 }
 
 class ListMaterialState extends State<ListMaterial> {
-  TextEditingController textController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
   String? nomF;
+  String? search;
+  @override
+  void initState() {
+    super.initState();
+    searchController.addListener(() {
+      setState(() {
+        nomF = null;
+        search = searchController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
       children: <Widget>[
         Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  nomF = null;
-                });
-              },
-              child: const Text("RESET"),
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: const BorderSide(color: Colors.blue))))),
           AnimSearchBar(
-              width: MediaQuery.of(context).size.width * 0.4,
-              textController: textController,
-              color: Colors.grey[300],
-              autoFocus: true,
-              onSuffixTap: () {
-                setState(() {
-                  textController.clear();
-                });
-              }),
+            width: MediaQuery.of(context).size.width * 0.4,
+            textController: searchController,
+            color: Colors.grey[300],
+            helpText: "search ...",
+            onSuffixTap: () {
+              setState(() {
+                searchController.clear();
+              });
+            },
+          ),
           FutureBuilder(
               future: Familyservice.getAllFamily(),
               builder: (BuildContext context,
@@ -70,6 +77,8 @@ class ListMaterialState extends State<ListMaterial> {
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
+                        search = null;
+                        searchController.clear();
                         nomF = value;
                       });
                     },
@@ -79,11 +88,28 @@ class ListMaterialState extends State<ListMaterial> {
                 }
               }),
         ]),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    nomF = null;
+                    search = null;
+                    searchController.clear();
+                  });
+                },
+                child: const Text("RESET"),
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: const BorderSide(color: Colors.blue))))),
+          ],
+        ),
         Expanded(
           child: FutureBuilder(
-              future: (nomF != null && nomF!.isNotEmpty)
-                  ? Materielservice.getMaterialByNomF(nomF!)
-                  : Materielservice.getAllMaterial(),
+              future: handleSearch(),
               builder: (BuildContext context,
                   AsyncSnapshot<List<Materiel>> projectSnap) {
                 if (projectSnap.connectionState == ConnectionState.none ||
@@ -144,5 +170,15 @@ class ListMaterialState extends State<ListMaterial> {
         )
       ],
     ));
+  }
+
+  Future<List<Materiel>> handleSearch() {
+    if (nomF != null && nomF!.isNotEmpty) {
+      return Materielservice.getMaterialByNomF(nomF!);
+    }
+    if (search != null && search!.isNotEmpty) {
+      return Materielservice.searchMaterial(search!);
+    }
+    return Materielservice.getAllMaterial();
   }
 }

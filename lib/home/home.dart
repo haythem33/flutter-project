@@ -26,6 +26,20 @@ class _MyHome extends State<MyHome> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("HOME"),
+        actions: <Widget>[
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () async {
+                  await AuthService.logOut();
+                  Navigator.pushNamed(context, '/login');
+                },
+                child: const Icon(
+                  Icons.logout,
+                  size: 26.0,
+                ),
+              )),
+        ],
       ),
       body: Navigator(
         key: key,

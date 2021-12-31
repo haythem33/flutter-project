@@ -69,4 +69,13 @@ class Materielservice {
         .update("MEMBERS", mem.toMap(), where: "id = ?", whereArgs: [mem.id]);
     return true;
   }
+
+  static Future<List<Materiel>> searchMaterial(String search) async {
+    Database db = await Mydatabase.getDatabase();
+    List<Map<String, Object?>> materials = await db.query("MATERIEL",
+        where: "nomMateriel LIKE ?", whereArgs: ['%$search%']);
+    List<Materiel> allMaterial = [];
+    materials.forEach((element) => allMaterial.add(Materiel.fromMap(element)));
+    return allMaterial;
+  }
 }
